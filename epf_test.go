@@ -17,22 +17,31 @@ func TestRateContributionTotal(t *testing.T) {
 }
 
 func TestSectionRate(t *testing.T) {
-	rate := SectionRate("A", 550.0)
+	sec := Sections[0]
+	rate := sec.Rate(550.0)
 	expected := 73.0
 	if rate.ContributionEmployer != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployer)
 	}
-	rate = SectionRate("B", 720.0)
+	rate = sec.Rate(25000.0)
+	expected = 3000.0
+	if rate.ContributionEmployer != expected {
+		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployer)
+	}
+	sec = Sections[1]
+	rate = sec.Rate(720.0)
 	expected = 80.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
-	rate = SectionRate("C", 1050.0)
+	sec = Sections[2]
+	rate = sec.Rate(1050.0)
 	expected = 59.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
-	rate = SectionRate("D", 1150.0)
+	sec = Sections[3]
+	rate = sec.Rate(1150.0)
 	expected = 64.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
@@ -72,5 +81,15 @@ func TestEmployeeSection(t *testing.T) {
 	section = seniorPR.Section()
 	if section.Name != "C" {
 		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
+	}
+}
+
+func TestEmployeeRate(t *testing.T) {
+	empAge := time.Now().AddDate(-30, 0, 0)
+	emp := NewEmployeeMalaysian(empAge, 1500.0)
+	rate := emp.Rate()
+	expected := 165.0
+	if rate.ContributionEmployee != expected {
+		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
 }
