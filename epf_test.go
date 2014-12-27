@@ -2,6 +2,7 @@ package epf
 
 import (
 	"testing"
+	"time"
 )
 
 func TestRateContributionTotal(t *testing.T) {
@@ -35,5 +36,41 @@ func TestSectionRate(t *testing.T) {
 	expected = 64.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
+	}
+}
+
+func TestEmployeeSection(t *testing.T) {
+	wages := 1500.0
+	seniorAge := time.Now().AddDate(-65, 0, 0)
+	juniorAge := time.Now().AddDate(-30, 0, 0)
+	juniorMalaysian := NewEmployeeMalaysian(juniorAge, wages)
+	section := juniorMalaysian.Section()
+	if section.Name != "A" {
+		t.Errorf("Expecting: %v , Gotten: %v", "A", section.Name)
+	}
+	seniorMalaysian := NewEmployeeMalaysian(seniorAge, wages)
+	section = seniorMalaysian.Section()
+	if section.Name != "C" {
+		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
+	}
+	juniorNonMalaysian := NewEmployeeNonMalaysian(false, juniorAge, wages)
+	section = juniorNonMalaysian.Section()
+	if section.Name != "B" {
+		t.Errorf("Expecting: %v , Gotten: %v", "B", section.Name)
+	}
+	seniorNonMalaysian := NewEmployeeNonMalaysian(false, seniorAge, wages)
+	section = seniorNonMalaysian.Section()
+	if section.Name != "D" {
+		t.Errorf("Expecting: %v , Gotten: %v", "D", section.Name)
+	}
+	juniorPR := NewEmployeePermanentResident(juniorAge, wages)
+	section = juniorPR.Section()
+	if section.Name != "A" {
+		t.Errorf("Expecting: %v , Gotten: %v", "A", section.Name)
+	}
+	seniorPR := NewEmployeePermanentResident(seniorAge, wages)
+	section = seniorPR.Section()
+	if section.Name != "C" {
+		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
 	}
 }
