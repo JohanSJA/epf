@@ -5,19 +5,40 @@ import (
 	"time"
 )
 
-func TestRateContributionTotal(t *testing.T) {
+func TestRateContributionTotal0(t *testing.T) {
 	rate := Rate{ContributionEmployer: 0.0, ContributionEmployee: 0.0}
 	if rate.ContributionTotal() != 0.0+0.0 {
 		t.Fail()
 	}
-	rate = Rate{ContributionEmployer: 1300.0, ContributionEmployee: 1100.0}
+}
+
+func TestRateContributionTotal2400(t *testing.T) {
+	rate := Rate{ContributionEmployer: 1300.0, ContributionEmployee: 1100.0}
 	if rate.ContributionTotal() != 1300.0+1100.0 {
 		t.Fail()
 	}
 }
 
-func TestSectionRate(t *testing.T) {
-	sec := Sections[0]
+func TestSectionByNameValid(t *testing.T) {
+	name := "A"
+	_, err := SectionByName(name)
+	if err != nil {
+		t.Fail()
+	}
+}
+
+func TestSectionByNameInvalid(t *testing.T) {
+	_, err := SectionByName("Invalid")
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestSectionARate(t *testing.T) {
+	sec, err := SectionByName("A")
+	if err != nil {
+		t.Skip()
+	}
 	rate := sec.Rate(550.0)
 	expected := 73.0
 	if rate.ContributionEmployer != expected {
@@ -28,57 +49,99 @@ func TestSectionRate(t *testing.T) {
 	if rate.ContributionEmployer != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployer)
 	}
-	sec = Sections[1]
-	rate = sec.Rate(720.0)
-	expected = 80.0
-	if rate.ContributionEmployee != expected {
-		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
+}
+
+func TestSectionBRate(t *testing.T) {
+	sec, err := SectionByName("B")
+	if err != nil {
+		t.Skip()
 	}
-	sec = Sections[2]
-	rate = sec.Rate(1050.0)
-	expected = 59.0
-	if rate.ContributionEmployee != expected {
-		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
-	}
-	sec = Sections[3]
-	rate = sec.Rate(1150.0)
-	expected = 64.0
+	rate := sec.Rate(720.0)
+	expected := 80.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
 }
 
-func TestEmployeeSection(t *testing.T) {
+func TestSectionCRate(t *testing.T) {
+	sec, err := SectionByName("C")
+	if err != nil {
+		t.Skip()
+	}
+	rate := sec.Rate(1050.0)
+	expected := 59.0
+	if rate.ContributionEmployee != expected {
+		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
+	}
+}
+
+func TestSectionDRate(t *testing.T) {
+	sec, err := SectionByName("D")
+	if err != nil {
+		t.Skip()
+	}
+	rate := sec.Rate(1150.0)
+	expected := 64.0
+	if rate.ContributionEmployee != expected {
+		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
+	}
+}
+
+func TestEmployeeSectionJuniorMalaysian(t *testing.T) {
 	wages := 1500.0
-	seniorAge := time.Now().AddDate(-65, 0, 0)
-	juniorAge := time.Now().AddDate(-30, 0, 0)
-	juniorMalaysian := NewEmployeeMalaysian(juniorAge, wages)
-	section := juniorMalaysian.Section()
+	age := time.Now().AddDate(-30, 0, 0)
+	emp := NewEmployeeMalaysian(age, wages)
+	section := emp.Section()
 	if section.Name != "A" {
 		t.Errorf("Expecting: %v , Gotten: %v", "A", section.Name)
 	}
-	seniorMalaysian := NewEmployeeMalaysian(seniorAge, wages)
-	section = seniorMalaysian.Section()
+}
+
+func TestEmployerSectionSeniorMalaysian(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-70, 0, 0)
+	emp := NewEmployeeMalaysian(age, wages)
+	section := emp.Section()
 	if section.Name != "C" {
 		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
 	}
-	juniorNonMalaysian := NewEmployeeNonMalaysian(false, juniorAge, wages)
-	section = juniorNonMalaysian.Section()
+}
+
+func TestEmployerSectionJuniorNonMalaysian(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-30, 0, 0)
+	emp := NewEmployeeNonMalaysian(false, age, wages)
+	section := emp.Section()
 	if section.Name != "B" {
 		t.Errorf("Expecting: %v , Gotten: %v", "B", section.Name)
 	}
-	seniorNonMalaysian := NewEmployeeNonMalaysian(false, seniorAge, wages)
-	section = seniorNonMalaysian.Section()
+}
+
+func TestEmployerSectionSeniorNonMalaysian(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-70, 0, 0)
+	emp := NewEmployeeNonMalaysian(false, age, wages)
+	section := emp.Section()
 	if section.Name != "D" {
 		t.Errorf("Expecting: %v , Gotten: %v", "D", section.Name)
 	}
-	juniorPR := NewEmployeePermanentResident(juniorAge, wages)
-	section = juniorPR.Section()
+}
+
+func TestEmployeeSectionJuniorPR(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-30, 0, 0)
+	emp := NewEmployeePermanentResident(age, wages)
+	section := emp.Section()
 	if section.Name != "A" {
 		t.Errorf("Expecting: %v , Gotten: %v", "A", section.Name)
 	}
-	seniorPR := NewEmployeePermanentResident(seniorAge, wages)
-	section = seniorPR.Section()
+}
+
+func TestEmployeeSectionSeniorPR(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-70, 0, 0)
+	emp := NewEmployeePermanentResident(age, wages)
+	section := emp.Section()
 	if section.Name != "C" {
 		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
 	}

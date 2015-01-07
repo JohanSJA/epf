@@ -1,6 +1,7 @@
 package epf
 
 import (
+	"errors"
 	"github.com/bearbin/go-age"
 	"math"
 	"time"
@@ -108,6 +109,16 @@ func calculate(method calculationMethod, base float64, amount float64) float64 {
 	default:
 		return amount
 	}
+}
+
+// Look for a particular section based on its name.
+func SectionByName(name string) (Section, error) {
+	for _, sec := range Sections {
+		if sec.Name == name {
+			return sec, nil
+		}
+	}
+	return Section{}, errors.New("Invalid section.")
 }
 
 /*
