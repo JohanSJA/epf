@@ -159,6 +159,17 @@ func TestEmployeeSectionsMalaysian(t *testing.T) {
 	}
 }
 
+func TestEmployeeUnknown(t *testing.T) {
+	emp := Employee{}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[0], &Sections[1], &Sections[2], &Sections[3]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
 func TestEmployeeSectionsPR(t *testing.T) {
 	emp := Employee{Citizenship: PermanentResident}
 	sections := emp.Sections()

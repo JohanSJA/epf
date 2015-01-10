@@ -235,7 +235,7 @@ func (e *Employee) Sections() []*Section {
 		default:
 			return []*Section{&Sections[1], &Sections[3]}
 		}
-	default:
+	case !e.DateOfBirth.IsZero():
 		// Get applicable sections if date of birth is not unknown.
 		age := age.Age(e.DateOfBirth)
 		switch {
@@ -244,6 +244,8 @@ func (e *Employee) Sections() []*Section {
 		default:
 			return []*Section{&Sections[0], &Sections[1]}
 		}
+	default:
+		return []*Section{&Sections[0], &Sections[1], &Sections[2], &Sections[3]}
 	}
 }
 
