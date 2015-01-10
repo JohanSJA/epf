@@ -1,6 +1,7 @@
 package epf
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -144,6 +145,76 @@ func TestEmployeeSectionSeniorPR(t *testing.T) {
 	section := emp.Section()
 	if section.Name != "C" {
 		t.Errorf("Expecting: %v , Gotten: %v", "C", section.Name)
+	}
+}
+
+func TestEmployeeSectionsMalaysian(t *testing.T) {
+	emp := Employee{Citizenship: Malaysian}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[0], &Sections[2]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
+func TestEmployeeSectionsPR(t *testing.T) {
+	emp := Employee{Citizenship: PermanentResident}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[0], &Sections[2]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
+func TestEmployeeSectionsNonMalaysian(t *testing.T) {
+	emp := Employee{Citizenship: NonMalaysian}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[1], &Sections[3]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
+func TestEmployeeSectionsJunior(t *testing.T) {
+	age := time.Now().AddDate(-30, 0, 0)
+	emp := Employee{DateOfBirth: age}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[0], &Sections[1]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
+func TestEmployeeSectionsSenior(t *testing.T) {
+	age := time.Now().AddDate(-65, 0, 0)
+	emp := Employee{DateOfBirth: age}
+	sections := emp.Sections()
+	expected := []*Section{&Sections[2], &Sections[3]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
+	}
+}
+
+func TestEmployeeSectionsJuniorMalaysian(t *testing.T) {
+	wages := 1500.0
+	age := time.Now().AddDate(-30, 0, 0)
+	emp := NewEmployeeMalaysian(age, wages)
+	sections := emp.Sections()
+	expected := []*Section{&Sections[0]}
+	if !reflect.DeepEqual(sections, expected) {
+		t.Logf("Expecting: %v", expected)
+		t.Logf("Gotten: %v", sections)
+		t.Fail()
 	}
 }
 

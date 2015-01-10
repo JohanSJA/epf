@@ -46,7 +46,8 @@ type Rate struct {
 type Citizenship int
 
 const (
-	Malaysian Citizenship = iota
+	Unknown Citizenship = iota
+	Malaysian
 	PermanentResident
 	NonMalaysian
 )
@@ -213,6 +214,35 @@ func (e *Employee) Section() *Section {
 			return &Sections[3]
 		default:
 			return &Sections[1]
+		}
+	}
+}
+
+// Return a list of applicable sections
+func (e *Employee) Sections() []*Section {
+	switch {
+	case e.Citizenship != Unknown && !e.DateOfBirth.IsZero():
+		// If both citizenship and date of birth is known, we can actually get
+		// a precise section. So return a list of 1 element.
+		return []*Section{e.Section()}
+	case e.Citizenship != Unknown:
+		// Get applicable sections if citizenship is not unknown.
+		switch {
+		case e.Citizenship == Malaysian ||
+			e.Citizenship == PermanentResident ||
+			(e.Citizenship == NonMalaysian && e.ContributionBefore1August1998):
+			return []*Section{&Sections[0], &Sections[2]}
+		default:
+			return []*Section{&Sections[1], &Sections[3]}
+		}
+	default:
+		// Get applicable sections if date of birth is not unknown.
+		age := age.Age(e.DateOfBirth)
+		switch {
+		case age > seniorAge:
+			return []*Section{&Sections[2], &Sections[3]}
+		default:
+			return []*Section{&Sections[0], &Sections[1]}
 		}
 	}
 }
