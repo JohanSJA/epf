@@ -29,6 +29,7 @@ type rateCalculation struct {
 // Type representing a section inside the Third Schedule.
 type Section struct {
 	Name         string            // The name of the section
+	Description  string            // Explanation of the section
 	calculations []rateCalculation // Different ways to calculate the rate within the section
 }
 
@@ -74,28 +75,65 @@ func init() {
 		{20.0, 5000.0, 20.0, percentage, 0.13, percentage, 0.11},
 		{5000.0, 20000.0, 100.0, percentage, 0.12, percentage, 0.11},
 	}
-	a := Section{"A", calculationsForA}
+	descA := `The rate of monthly contributions specified in this Part shall apply to:-
+- employees who are Malaysian citizens;
+- employees who are not Malaysian citizens but are permanent residents of Malaysia; and
+- employees who are not Malaysian citizens who have elected to contribute before 1 August 1998.
+until the the employee reached the age of sixty years
+
+In this Part:-
+- the amount of wages for the month which shall be contributd to the Fund by each employer for each employee shall be according to any limit on the amount of wages and contributions as prescribed by the Board; and
+- the amount of contributions for the month for the purpose of subsection 43(3) and section 44A is limited to any limit on the total contributions as prescribed by the Board.`
+	a := Section{"A", descA, calculationsForA}
 	calculationsForB := []rateCalculation{
 		{0.0, 10.0, 10.0, notApplicable, 0.0, notApplicable, 0.0},
 		{10.0, 20.0, 10.0, exactAmount, 5.0, percentage, 0.11},
 		{20.0, 5000.0, 20.0, exactAmount, 5.0, percentage, 0.11},
 		{5000.0, 20000.0, 100.0, exactAmount, 5.0, percentage, 0.11},
 	}
-	b := Section{"B", calculationsForB}
+	descB := `The rate of monthly contributions specified in this Part shall apply to employees who are not Malaysian citizens:-
+- who elect to contribute on or after 1 August 1998;
+- who elect to contribute under subsection 54(3) on or after 1 August 1998; and
+- who elect to contribute under paragraph 6 of the First Schedule on or after 1 August 2001.
+until the the employee reached the age of sixty years
+
+In this Part:-
+- the amount of wages for the month which shall be contributd to the Fund by each employer for each employee shall be according to any limit on the amount of wages and contributions as prescribed by the Board; and
+- the amount of contributions for the month for the purpose of subsection 43(3) and section 44A is limited to any limit on the total contributions as prescribed by the Board.`
+	b := Section{"B", descB, calculationsForB}
 	calculationsForC := []rateCalculation{
 		{0.0, 10.0, 10.0, notApplicable, 0.0, notApplicable, 0.0},
 		{10.0, 20.0, 10.0, percentage, 0.065, percentage, 0.055},
 		{20.0, 5000.0, 20.0, percentage, 0.065, percentage, 0.055},
 		{5000.0, 20000.0, 100.0, percentage, 0.06, percentage, 0.055},
 	}
-	c := Section{"C", calculationsForC}
+	descC := `The rate of monthly contributions specified in this Part shall apply to:-
+- employees who are Malaysian citizens;
+- employees who are not Malaysian citizens but are permanent residents of Malaysia; and
+- employees who are not Malaysian citizens who have elected to contribute before 1 August 1998.
+who have attained the age of sixty years.
+
+In this Part:-
+- the amount of wages for the month which shall be contributd to the Fund by each employer for each employee shall be according to any limit on the amount of wages and contributions as prescribed by the Board; and
+- the amount of contributions for the month for the purpose of subsection 43(3) and section 44A is limited to any limit on the total contributions as prescribed by the Board.`
+	c := Section{"C", descC, calculationsForC}
 	calculationsForD := []rateCalculation{
 		{0.0, 10.0, 10.0, notApplicable, 0.0, notApplicable, 0.0},
 		{10.0, 20.0, 10.0, exactAmount, 5.0, percentage, 0.055},
 		{20.0, 5000.0, 20.0, exactAmount, 5.0, percentage, 0.055},
 		{5000.0, 20000.0, 100.0, exactAmount, 5.0, percentage, 0.055},
 	}
-	d := Section{"D", calculationsForD}
+	descD := `The rate of monthly contributions specified in this Part shall apply to employees who are not Malaysian citizens:-
+- who elect to contribute on or after 1 August 1998;
+- who elect to contribute under subsection 54(3) on or after 1 August 1998; and
+- who elect to contribute under paragraph 3 of the First Schedule on or after 1 August 1998; and
+- who elect to contribute under paragraph 6 of the First Schedule on or after 1 August 2001.
+who have attained the arge of sixty years.
+
+In this Part:-
+- the amount of wages for the month which shall be contributd to the Fund by each employer for each employee shall be according to any limit on the amount of wages and contributions as prescribed by the Board; and
+- the amount of contributions for the month for the purpose of subsection 43(3) and section 44A is limited to any limit on the total contributions as prescribed by the Board.`
+	d := Section{"D", descD, calculationsForD}
 	Sections = []Section{a, b, c, d}
 }
 
