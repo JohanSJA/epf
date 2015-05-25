@@ -2,9 +2,10 @@ package epf
 
 import (
 	"errors"
-	"github.com/bearbin/go-age"
 	"math"
 	"time"
+
+	"github.com/bearbin/go-age"
 )
 
 // Different methods in calculating a rate
@@ -26,7 +27,7 @@ type rateCalculation struct {
 	EmployeeAmount float64
 }
 
-// Type representing a section inside the Third Schedule.
+// Section representing a section inside the Third Schedule.
 type Section struct {
 	Name         string            // The name of the section
 	Description  string            // Explanation of the section
@@ -36,6 +37,7 @@ type Section struct {
 // Each section represent a different section documented in the Third Schedule.
 var Sections []Section
 
+// Rate represents a single row in a section.
 type Rate struct {
 	WagesFrom            float64
 	WagesTo              float64
@@ -43,8 +45,10 @@ type Rate struct {
 	ContributionEmployee float64
 }
 
+// Citizenship represents the citizenship status of an employee.
 type Citizenship int
 
+// Different types of citizenship status.
 const (
 	Unknown Citizenship = iota
 	Malaysian
@@ -52,10 +56,9 @@ const (
 	NonMalaysian
 )
 
-/*
-Type representing an employee. ContributionBefore1August1998 is actually only
-required for Non Malaysian. The rest however are required for all employees.
-*/
+// Employee contains employee information.
+// ContributionBefore1August1998 is actually only required for Non Malaysian.
+// The rest however are required for all employees.
 type Employee struct {
 	Citizenship                   Citizenship
 	ContributionBefore1August1998 bool
@@ -150,7 +153,7 @@ func calculate(method calculationMethod, base float64, amount float64) float64 {
 	}
 }
 
-// Look for a particular section based on its name.
+// SectionByName looks for a particular section based on its name.
 func SectionByName(name string) (Section, error) {
 	for _, sec := range Sections {
 		if sec.Name == name {
@@ -160,10 +163,8 @@ func SectionByName(name string) (Section, error) {
 	return Section{}, errors.New("Invalid section.")
 }
 
-/*
-Return all the rates within a particular section. These are the rates that are
-listed within the table inside Third Schedule.
-*/
+// Rates returns all the rates within a particular section. These are the rates
+// that are listed within the table inside Third Schedule.
 func (s *Section) Rates() []Rate {
 	rates := []Rate{}
 	for _, calc := range s.calculations {
@@ -177,7 +178,7 @@ func (s *Section) Rates() []Rate {
 	return rates
 }
 
-// Return a particular rate for a given wages within the given section
+// Rate returns a particular rate for a given wages within the given section
 func (s *Section) Rate(wages float64) Rate {
 	// Check whether the rate is within the normal table. Return if it is.
 	rates := s.Rates()
@@ -195,7 +196,7 @@ func (s *Section) Rate(wages float64) Rate {
 	return Rate{from, to, employer, employee}
 }
 
-// Return a particular section applicable to the given employee.
+// Section returns a particular section applicable to the given employee.
 func (e *Employee) Section() *Section {
 	age := age.Age(e.DateOfBirth)
 	switch {
@@ -218,7 +219,7 @@ func (e *Employee) Section() *Section {
 	}
 }
 
-// Return a list of applicable sections
+// Sections returns a list of applicable sections
 func (e *Employee) Sections() []*Section {
 	switch {
 	case e.Citizenship != Unknown && !e.DateOfBirth.IsZero():
@@ -249,18 +250,18 @@ func (e *Employee) Sections() []*Section {
 	}
 }
 
-// Return a particular rate applicable to the given employee.
+// Rate returns a particular rate applicable to the given employee.
 func (e *Employee) Rate() Rate {
 	sec := e.Section()
 	return sec.Rate(e.Wages)
 }
 
-// Return the total contribution from employer and employee
+// ContributionTotal returns the total contribution from employer and employee
 func (r *Rate) ContributionTotal() float64 {
 	return r.ContributionEmployer + r.ContributionEmployee
 }
 
-// Create a new Malaysian Employee
+// NewEmployeeMalaysian creates a new Malaysian Employee
 func NewEmployeeMalaysian(dateOfBirth time.Time, wages float64) Employee {
 	return Employee{
 		Citizenship: Malaysian,
@@ -269,7 +270,7 @@ func NewEmployeeMalaysian(dateOfBirth time.Time, wages float64) Employee {
 	}
 }
 
-// Create a new Permanent Resident Employee
+// NewEmployeePermanentResident creates a new Permanent Resident Employee
 func NewEmployeePermanentResident(dateOfBirth time.Time, wages float64) Employee {
 	return Employee{
 		Citizenship: PermanentResident,
@@ -278,7 +279,7 @@ func NewEmployeePermanentResident(dateOfBirth time.Time, wages float64) Employee
 	}
 }
 
-// Create a new Non Malaysian Employee
+// NewEmployeeNonMalaysian creates a new Non Malaysian Employee
 func NewEmployeeNonMalaysian(contributeBefore1August1998 bool, dateOfBirth time.Time, wages float64) Employee {
 	return Employee{
 		NonMalaysian,
