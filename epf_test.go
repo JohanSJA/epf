@@ -58,7 +58,7 @@ func TestSectionBRate(t *testing.T) {
 		t.Skip()
 	}
 	rate := sec.Rate(720.0)
-	expected := 80.0
+	expected := 58.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
@@ -70,7 +70,7 @@ func TestSectionCRate(t *testing.T) {
 		t.Skip()
 	}
 	rate := sec.Rate(1050.0)
-	expected := 59.0
+	expected := 43.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
@@ -82,7 +82,7 @@ func TestSectionDRate(t *testing.T) {
 		t.Skip()
 	}
 	rate := sec.Rate(1150.0)
-	expected := 64.0
+	expected := 47.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
@@ -233,7 +233,7 @@ func TestEmployeeRate(t *testing.T) {
 	empAge := time.Now().AddDate(-30, 0, 0)
 	emp := NewEmployeeMalaysian(empAge, 1500.0)
 	rate := emp.Rate()
-	expected := 165.0
+	expected := 120.0
 	if rate.ContributionEmployee != expected {
 		t.Errorf("Expecting: %v , Gotten: %v", expected, rate.ContributionEmployee)
 	}
