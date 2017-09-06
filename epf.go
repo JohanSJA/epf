@@ -34,7 +34,7 @@ type Section struct {
 	calculations []rateCalculation // Different ways to calculate the rate within the section
 }
 
-// Each section represent a different section documented in the Third Schedule.
+// Sections contains each different section documented in the Third Schedule.
 var Sections []Section
 
 // Rate represents a single row in a section.
@@ -151,7 +151,7 @@ func SectionByName(name string) (Section, error) {
 			return sec, nil
 		}
 	}
-	return Section{}, errors.New("Invalid section.")
+	return Section{}, errors.New("invalid section")
 }
 
 // Rates returns all the rates within a particular section. These are the rates
